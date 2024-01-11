@@ -7,11 +7,27 @@ const tokens = (n) => {
 
 describe('Escrow', () => {
 
-    it('Saves Address', async ()  => {
-        const RealEstate = await ethers.getContractFactory('RealEstate')
-        const realEstate = await RealEstate.deploy();
+    let buyer, seller, inspector, lender
+    let realEstate, escrow
 
-        console.log(realEstate.address)
+    it('Saves Address', async ()  => {
+
+        [buyer, seller, inspector, lender] = await ethers.getSigners()
+
+
+        const RealEstate = await ethers.getContractFactory('RealEstate')
+        realEstate = await RealEstate.deploy();
+
+        let transaction = await realEstate.connect(seller).mint("https://ipfs.io/ipfs/QmTudSYeM7mz3PkYEWXWqPjomRPHogcMFSq7XAvsvsgAPS")
+        await transaction.wait();
+
+        const Escrow = await ethers.getContractFactory('Escrow');
+        escrow = await Escrow.deploy(
+            realEstate.address,
+            lender.address,
+            seller.address,
+            buyer.address
+        );
     })
 
 })

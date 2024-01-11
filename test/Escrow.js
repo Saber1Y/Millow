@@ -8,9 +8,9 @@ const tokens = (n) => {
 describe('Escrow', () => {
 
     let buyer, seller, inspector, lender
-    let realEstate, escrow
+    let realEstate, escrow, result
 
-    it('Saves Address', async ()  => {
+    it('Saves Address', async () => {
 
         [buyer, seller, inspector, lender] = await ethers.getSigners()
 
@@ -26,8 +26,14 @@ describe('Escrow', () => {
             realEstate.address,
             lender.address,
             seller.address,
-            buyer.address
+            inspector.address
         );
+
+        result = await escrow.nftAddress()
+        expect(result).to.equal(realEstate.address);
+
+        result = await escrow.seller()
+        expect(result).to.equal(seller.address);
     })
 
 })
